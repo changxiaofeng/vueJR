@@ -50,7 +50,11 @@
         <el-input v-model="formLabelAlign.IMAGE1_ITEM1S" placeholder="请输入登记证书编号"></el-input>
       </el-form-item>
       <el-form-item label="抵押日期" prop="IMAGE1_ITEM6">
-        <el-input v-model="formLabelAlign.IMAGE1_ITEM6" placeholder="请输入抵押日期"></el-input>
+        <el-date-picker
+          v-model="formLabelAlign.IMAGE1_ITEM6"
+          type="date"
+          placeholder="选择日期">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="图片" prop="IMAGE1_PATH">
         <el-button @click="openimg">查看图片</el-button>
@@ -79,7 +83,11 @@
         <el-input v-model="formLabelAlign.IMAGE2_ITEM1S" placeholder="请输入登记证书编号"></el-input>
       </el-form-item>
       <el-form-item label="抵押日期" prop="IMAGE2_ITEM6">
-        <el-input v-model="formLabelAlign.IMAGE2_ITEM6" placeholder="请输入抵押日期"></el-input>
+        <el-date-picker
+          v-model="formLabelAlign.IMAGE2_ITEM6"
+          type="date"
+          placeholder="选择日期">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="图片" prop="IMAGE2_PATH">
         <el-button @click="openimgTwo">查看图片</el-button>
@@ -87,7 +95,7 @@
     </el-form>
     <div class="ui-btn">
       <el-button type="danger"  @click="submit('formLabelAlign')">复核完成</el-button>
-      <el-button><router-link to="/">返回</router-link></el-button>
+      <router-link to="/"><el-button>返回</el-button></router-link>
     </div>
   </div>
 </template>
@@ -245,18 +253,11 @@ export default defineComponent({
         this.$router.push({ path: '/' })
       })
     },
-    // queryOcrImg (obj) {
-    //   // this.$get('/mock/queryOcrImg.json', obj).then(res => {
-    //   this.$post('/ocr/queryOcrImg.do', obj).then(res => {
-    //     window.open(obj, '_blank')
-    //   })
-    // },
     // 点击图一打开新窗口
     openimg () {
       const CONT_NAMES = this.formformInline.CONT_NAME
       const IMAGE_TYPE = this.formLabelAlign.IMAGE1_TYPE
       const exportUrl = this.baseUrl + '?CONT_NAME=' + CONT_NAMES + '&IMAGE_TYPE=' + IMAGE_TYPE
-      // this.queryOcrImg(exportUrl)
       window.open(exportUrl, '_blank')
     },
     // 点击图二打开新窗口
@@ -264,7 +265,6 @@ export default defineComponent({
       const CONT_NAMES = this.formformInline.CONT_NAME
       const IMAGE_TYPE = this.formLabelAlign.IMAGE2_TYPE
       const exportUrl = this.baseUrl + '?CONT_NAME=' + CONT_NAMES + '&IMAGE_TYPE=' + IMAGE_TYPE
-      // this.queryOcrImg(exportUrl)
       window.open(exportUrl, '_blank')
     }
   }
@@ -300,5 +300,8 @@ h2{
 .ui-btn{
       text-align: right;
     padding: 4% 14%;
+}
+.el-button--danger{
+  margin-right: 10px;
 }
 </style>

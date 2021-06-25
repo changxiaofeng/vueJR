@@ -10,8 +10,7 @@ const routerHashHistory = createWebHashHistory()
 // 每条路由都映射到一个组件。
 const routes = [
   { path: '/', name: 'RegisterList', component: () => import('@/pages/Register/RegisterList') },
-  { path: '/InfoEdit', name: 'InfoEdit', component: () => import('@/pages/Register/InfoEdit') },
-  { path: '/PreviewSrcList', name: 'PreviewSrcList', component: () => import('@/pages/Register/PreviewSrcList') }
+  { path: '/InfoEdit', name: 'InfoEdit', component: () => import('@/pages/Register/InfoEdit') }
 ]
 
 // 3、创建router实例，然后传'routes'配置

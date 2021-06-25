@@ -50,30 +50,25 @@
       <el-table-column prop="IS_CHECKED" label="已复核" :formatter="formchecked" width="100">
       </el-table-column>
     </el-table>
-    <div class="block">
-        <el-pagination
-          :hide-on-single-page="paginationValue"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="page.pageNo"
-          :page-sizes="pageSizes"
-          :page-size="page.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="page.totalNum">
-        </el-pagination>
-    </div>
+    <PageComp :totalCount="pageTotal.totalCount" @pageChange="pageChange" :pageNo="pageTotal.pageNo"></PageComp>
   </div>
 </template>
 
 <script>
 import { defineComponent, ref } from 'vue'
+import PageComp from '@/components/PageComponent.vue'
 export default defineComponent({
   name: 'RegisterList',
-  components: {},
+  components: {
+    PageComp
+  },
   data: function () {
     return {
       value1: false,
       options: [{
+        value: '',
+        label: '请选择是否可疑'
+      }, {
         value: '1',
         label: '可疑'
       }, {
@@ -82,6 +77,9 @@ export default defineComponent({
       }],
       value: '',
       options1: [{
+        value: '',
+        label: '请选择是否复核'
+      }, {
         value: '1',
         label: '已复核'
       }, {
@@ -89,6 +87,9 @@ export default defineComponent({
         label: '未复核'
       }],
       department: [{
+        value: '',
+        label: '请选择部门'
+      }, {
         value: '15',
         label: '厂融部'
       }, {
@@ -104,15 +105,11 @@ export default defineComponent({
       IS_CHECKED: '',
       DEPT: '',
       PAGE_SIZE: '',
-      // NEXT_KEY: 1,
       tableData: [],
-      // totalNum总条数 pageNo当前页数 pageSize每页显示条数 pageSizes每页最多显示多少条  paginationValue当只有一页时是否隐藏分页
-      paginationValue: false,
-      pageSizes: [10, 20, 50, 100],
-      page: {
+      pageTotal: {
+        pageNo: 1, // 当前页数
         pageSize: 10, // 每页显示条数
-        totalNum: 0, // 条目总数
-        pageNo: 1 // 当前页数
+        totalCount: 0 // 条目总数
       }
     }
   },
@@ -125,29 +122,15 @@ export default defineComponent({
     this.queryOcrList()
   },
   methods: {
+    // 分页
+    pageChange (item) {
+      this.pageTotal.pageNo = item.pageNo
+      this.pageTotal.pageSize = item.pageSize
+      this.queryOcrList() // 改变页码，重新渲染页面
+    },
     hreftwo (row, column, event) {
       // 跳转页面
       this.$router.push({ path: '/InfoEdit', query: { PK_VEHICLE_REGISTRATION_BOOK: row.PK_VEHICLE_REGISTRATION_BOOK } })
-    },
-    // pageSize 改变时会触发
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
-      this.page.pageSize = val
-      this.queryOcrList()
-    },
-    // currentPage 改变时会触发
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
-      if (val === null) {
-        this.page.pageNo = '1'
-      } else {
-        this.page.pageNo = val
-      }
-      this.queryOcrList()
-    },
-    prevClick (val) {
-      this.page.pageNo = val
-      this.queryOcrList()
     },
     // 列表查询
     queryOcrList () {
@@ -160,11 +143,12 @@ export default defineComponent({
         VIN: this.VIN,
         IS_CHECKED: this.IS_CHECKED,
         DEPT: this.DEPT,
-        PAGE_SIZE: this.page.pageSize + '',
-        NEXT_KEY: this.page.pageNo + ''
+        PAGE_SIZE: this.pageTotal.pageSize + '',
+        NEXT_KEY: this.pageTotal.pageNo + ''
       }).then(res => {
         this.tableData = res.LIST
-        this.page.totalNum = res.TOTAL_NUM
+        this.pageTotal.pageSize = parseInt(res.PAGE_NUM)
+        this.pageTotal.totalCount = parseInt(res.TOTAL_NUM)
       })
     },
     // 重置查询条件
@@ -232,10 +216,6 @@ export default defineComponent({
   .el-select{
     width: 24%;
     margin: 0 6% 16px 0;
-  }
-  .block{
-    text-align: center;
-    margin-top: 30px;
   }
   .el-table{
     margin-top: 20px;
