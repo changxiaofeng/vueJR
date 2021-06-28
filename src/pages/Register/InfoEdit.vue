@@ -1,7 +1,7 @@
 <template>
   <div class="infoEdit">
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">登记证列表</el-breadcrumb-item>
+      <el-breadcrumb-item @click="goListPage">登记证列表</el-breadcrumb-item>
       <el-breadcrumb-item><a href="/">登记证信息修改</a></el-breadcrumb-item>
     </el-breadcrumb>
     <el-form :label-position="labelPosition" label-width="80px" :model="formformInline">
@@ -94,8 +94,8 @@
       </el-form-item>
     </el-form>
     <div class="ui-btn">
-      <el-button type="danger"  @click="submit('formLabelAlign')">复核完成</el-button>
-      <router-link to="/"><el-button>返回</el-button></router-link>
+      <el-button type="danger" @click="submit('formLabelAlign')">复核完成</el-button>
+      <el-button @click="goListPage">返回</el-button>
     </div>
   </div>
 </template>
@@ -108,7 +108,8 @@ export default defineComponent({
   components: {},
   data: function () {
     return {
-      baseUrl: 'http://172.16.248.23:7089/ocr-batch/ocrImg/',
+      // baseUrl: 'http://172.16.250.25:7084//ocr-batch/resource/',
+      baseUrl: 'http://172.16.248.23:7089/ocr-batch/resource/',
       labelPosition: 'right',
       formformInline: {
         CONT_NAME: '',
@@ -253,18 +254,22 @@ export default defineComponent({
         this.$router.push({ path: '/' })
       })
     },
+    // 返回
+    goListPage () {
+      this.$router.push({ path: '/', query: { pageType: '1' } })
+    },
     // 点击图一打开新窗口
     openimg () {
-      const CONT_NAMES = this.formformInline.CONT_NAME
+      const VIN = this.formformInline.VIN
       const IMAGE_TYPE = this.formLabelAlign.IMAGE1_TYPE
-      const exportUrl = this.baseUrl + '?CONT_NAME=' + CONT_NAMES + '&IMAGE_TYPE=' + IMAGE_TYPE
+      const exportUrl = this.baseUrl + '?id=' + VIN + '&type=' + IMAGE_TYPE
       window.open(exportUrl, '_blank')
     },
     // 点击图二打开新窗口
     openimgTwo () {
-      const CONT_NAMES = this.formformInline.CONT_NAME
+      const VIN = this.formformInline.VIN
       const IMAGE_TYPE = this.formLabelAlign.IMAGE2_TYPE
-      const exportUrl = this.baseUrl + '?CONT_NAME=' + CONT_NAMES + '&IMAGE_TYPE=' + IMAGE_TYPE
+      const exportUrl = this.baseUrl + '?id=' + VIN + '&type=' + IMAGE_TYPE
       window.open(exportUrl, '_blank')
     }
   }
