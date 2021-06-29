@@ -1,33 +1,41 @@
 <template>
   <div class="register-list">
-    <!-- <h1>{{ msg }}</h1> -->
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">登记证列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="ui-screen">
-      <div class="ui-input">
-          <el-input class="demo-input" v-model="queryOcrData.CONT_NAME" placeholder="请输入合同名称"></el-input>
-          <el-input class="demo-input" v-model="queryOcrData.CUST_NAME" placeholder="请输入客户名称"></el-input>
-          <el-select v-model="queryOcrData.IS_SUSPICIOUS" placeholder="是否可疑">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-          </el-select>
-          <el-input class="demo-input" v-model="queryOcrData.DEALER_NAME" placeholder="请输入经销商名称"></el-input>
-          <el-input class="demo-input" v-model="queryOcrData.VIN" placeholder="请输入车架编号"></el-input>
-          <el-select v-model="queryOcrData.IS_CHECKED" placeholder="是否已复核">
-              <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-          </el-select>
-          <el-select v-model="queryOcrData.DEPT" placeholder="部门">
-              <el-option v-for="item in department" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-          </el-select>
-      </div>
-      <el-row class="ui-action">
-          <el-button plain @click="toReset()">重置</el-button>
-          <el-button type="danger" plain @click="queryOcrList()">查询</el-button>
-      </el-row>
-    </div>
+    <el-form :inline="true" :model="queryOcrData" ref="queryOcrData" class="demo-form-inline">
+      <el-form-item prop="CONT_NAME">
+        <el-input v-model="queryOcrData.CONT_NAME" placeholder="请输入合同名称"></el-input>
+      </el-form-item>
+      <el-form-item prop="CUST_NAME">
+        <el-input v-model="queryOcrData.CUST_NAME" placeholder="请输入客户名称"></el-input>
+      </el-form-item>
+      <el-form-item prop="DEALER_NAME">
+        <el-input v-model="queryOcrData.DEALER_NAME" placeholder="请输入经销商名称"></el-input>
+      </el-form-item>
+      <el-form-item prop="VIN">
+        <el-input v-model="queryOcrData.VIN" placeholder="请输入车架编号"></el-input>
+      </el-form-item>
+      <el-form-item prop="IS_SUSPICIOUS">
+        <el-select v-model="queryOcrData.IS_SUSPICIOUS" placeholder="是否可疑">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item prop="IS_CHECKED">
+        <el-select v-model="queryOcrData.IS_CHECKED" placeholder="是否已复核">
+          <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item prop="DEPT">
+        <el-select v-model="queryOcrData.DEPT" placeholder="部门">
+          <el-option v-for="item in department" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item class="ui-action">
+        <el-button @click="toReset('queryOcrData')">重置</el-button>
+        <el-button type="primary" @click="queryOcrList()">查询</el-button>
+      </el-form-item>
+    </el-form>
     <el-table :data="tableData" height="550" border style="width: 100%" @row-click="hreftwo">
       <el-table-column fixed prop="PK_VEHICLE_REGISTRATION_BOOK" label="" width="200" v-if="show">
       </el-table-column>
@@ -108,7 +116,6 @@ export default defineComponent({
         value: '19',
         label: '汽车金融部'
       }],
-      queryOcrListParams: {},
       queryOcrData: {
         CONT_NAME: '',
         CUST_NAME: '',
@@ -116,7 +123,9 @@ export default defineComponent({
         DEALER_NAME: '',
         VIN: '',
         IS_CHECKED: '',
-        DEPT: ''
+        DEPT: '',
+        NEXT_KEY: '1',
+        PAGE_SIZE: '10'
       },
       PK_VEHICLE_REGISTRATION_BOOK: '',
       PAGE_SIZE: '',
@@ -136,52 +145,38 @@ export default defineComponent({
   },
   mounted () {
     if (this.$route.query.pageType === '1') {
-      const userJsonStr = sessionStorage.getItem('queryOcrData')
-      this.queryOcrListParams = JSON.parse(userJsonStr)
-      this.queryOcrData = this.queryOcrListParams
-      this.page.pageNo = parseInt(this.queryOcrListParams.NEXT_KEY)
-      this.page.pageSize = parseInt(this.queryOcrListParams.PAGE_SIZE)
-      this.pageshow = false
-    } else {
-      this.queryOcrListParams = this.queryOcrData
-      this.queryOcrListParams.PAGE_SIZE = this.page.pageSize + ''
-      this.queryOcrListParams.NEXT_KEY = this.page.pageNo + ''
-    }
+      const screenData = sessionStorage.getItem('screenData')
+      if (screenData) {
+        this.queryOcrData = JSON.parse(screenData)
+        this.page.pageNo = parseInt(this.queryOcrData.NEXT_KEY)
+        this.page.pageSize = parseInt(this.queryOcrData.PAGE_SIZE)
+        this.pageshow = false
+      }
+    } else {}
     this.queryOcrList()
     this.$nextTick(() => {
       this.pageshow = true
     })
   },
   methods: {
+    // 跳转详情页面
     hreftwo (row) {
-      // 跳转详情页面页面
-      let screenData = {}
-      screenData = this.queryOcrData
-      screenData.PAGE_SIZE = this.page.pageSize + ''
-      screenData.NEXT_KEY = this.page.pageNo + ''
-      sessionStorage.setItem('queryOcrData', JSON.stringify(screenData))
+      sessionStorage.setItem('screenData', JSON.stringify(this.queryOcrData))
       this.$router.push({ path: '/InfoEdit', query: { PK_VEHICLE_REGISTRATION_BOOK: row.PK_VEHICLE_REGISTRATION_BOOK } })
     },
     // 列表查询
     queryOcrList () {
-      console.log(this.queryOcrListParams)
-      // this.$get('/mock/queryOcrList.json', this.queryOcrListParams).then(res => {
-      this.$post('/ocr/queryOcrList.do', this.queryOcrListParams).then(res => {
+      this.$post('/ocr/queryOcrList.do', this.queryOcrData).then(res => {
         this.tableData = res.LIST
         this.page.totalCount = parseInt(res.TOTAL_NUM)
+        if (sessionStorage.getItem('screenData')) {
+          sessionStorage.removeItem('screenData')
+        }
       })
     },
     // 重置查询条件
-    toReset () {
-      this.queryOcrData.CONT_NAME = ''
-      this.queryOcrData.CUST_NAME = ''
-      this.queryOcrData.IS_SUSPICIOUS = ''
-      this.queryOcrData.DEALER_NAME = ''
-      this.queryOcrData.VIN = ''
-      this.queryOcrData.IS_CHECKED = ''
-      this.queryOcrData.DEPT = ''
-      // this.PAGE_SIZE = ''
-      // this.NEXT_KEY = ''
+    toReset (formName) {
+      this.$refs[formName].resetFields()
     },
     formatter (row, column) {
       if (row.IS_SUSPICIOUS === '1') {
@@ -207,12 +202,12 @@ export default defineComponent({
     },
     handleSizeChange (val) {
       this.page.pageSize = val
-      this.queryOcrListParams.PAGE_SIZE = val + ''
+      this.queryOcrData.PAGE_SIZE = val + ''
       this.queryOcrList() // 改变页码，重新渲染页面
     },
     handleCurrentChange (val) {
       this.page.pageNo = val
-      this.queryOcrListParams.NEXT_KEY = val + ''
+      this.queryOcrData.NEXT_KEY = val + ''
       this.queryOcrList() // 改变页码，重新渲染页面
     }
   }
@@ -230,22 +225,17 @@ export default defineComponent({
     padding: 0 15px;
     margin: 0 auto;
   }
-  .ui-screen{
+  .el-form--inline{
     text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
   }
-  .ui-input{
-    width: 70%;
+  .el-form--inline .el-form-item{
+    width: 200px;
+    margin-right: 50px;
   }
-  .ui-action{
-    margin-bottom: 16px;
-  }
-  .demo-input,
-  .el-select{
-    width: 24%;
-    margin: 0 6% 16px 0;
+  .el-form--inline .ui-action{
+    margin-right: 0;
+    float: right;
+    text-align: right;
   }
   .el-table{
     margin-top: 20px;

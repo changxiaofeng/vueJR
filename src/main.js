@@ -13,11 +13,9 @@ import { post, get } from './api/http'
 
 const app = createApp(App)
 app.use(ElementPlus, { locale })
-// app.use(ElementPlus, { size: 'small', zIndex: 3000 })
 app.use(router)
 app.use(store)
 // 定义全局变量
 app.config.globalProperties.$post = post
 app.config.globalProperties.$get = get
-app.config.globalProperties.$baseUrl = 'http://172.16.250.25:7084/ocr-batch'
 app.mount('#app')

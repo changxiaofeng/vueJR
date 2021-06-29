@@ -94,7 +94,7 @@
       </el-form-item>
     </el-form>
     <div class="ui-btn">
-      <el-button type="danger" @click="submit('formLabelAlign')">复核完成</el-button>
+      <el-button type="primary" @click="submit('formLabelAlign')">复核完成</el-button>
       <el-button @click="goListPage">返回</el-button>
     </div>
   </div>
