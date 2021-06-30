@@ -167,6 +167,7 @@ export default defineComponent({
         this.formformInline.DEALER_NAME = res.DEALER_NAME
         this.formformInline.MORTGAGE_DATE = res.MORTGAGE_DATE
         this.formLabelAlign.IMAGE1_TYPE = Number(res.IMAGE1_TYPE)
+        // this.formLabelAlign.IMAGE1_TYPE = res.IMAGE1_TYPE
         if (res.IMAGE1_TYPE === '0') {
           this.formLabelAlign.IMAGE1_ITEM1S = res.IMAGE1_ITEM1
           this.IMAGE1_ITEM1Data = res.IMAGE1_ITEM1
@@ -185,6 +186,7 @@ export default defineComponent({
         this.formLabelAlign.IMAGE1_PATH = res.IMAGE1_PATH
 
         this.formLabelAlign.IMAGE2_TYPE = Number(res.IMAGE2_TYPE)
+        // this.formLabelAlign.IMAGE2_TYPE = res.IMAGE2_TYPE
         if (res.IMAGE2_TYPE === '0') {
           this.formLabelAlign.IMAGE2_ITEM1S = res.IMAGE2_ITEM1
           this.IMAGE2_ITEM1Data = res.IMAGE2_ITEM1
@@ -227,28 +229,32 @@ export default defineComponent({
     // 保存
     submit () {
       const obj = this.formLabelAlign
-      if (obj.IMAGE1_TYPE === '0') {
+      console.log(this.formLabelAlign)
+      if (obj.IMAGE1_TYPE === 0) {
         obj.IMAGE1_ITEM1 = obj.IMAGE1_ITEM1S
         obj.IMAGE1_ITEM5 = ''
-      } else if (obj.IMAGE1_TYPE === '0') {
+      } else if (obj.IMAGE1_TYPE === 1) {
         obj.IMAGE1_ITEM1 = ''
         obj.IMAGE1_ITEM5 = obj.IMAGE1_ITEM1S
       } else {
         obj.IMAGE1_ITEM1 = ''
         obj.IMAGE1_ITEM5 = ''
       }
-      if (obj.IMAGE2_TYPE === '0') {
+      if (obj.IMAGE2_TYPE === 0) {
         obj.IMAGE2_ITEM1 = obj.IMAGE2_ITEM1S
         obj.IMAGE2_ITEM5 = ''
-      } else if (obj.IMAGE1_TYPE === '0') {
+      } else if (obj.IMAGE1_TYPE === 1) {
         obj.IMAGE2_ITEM1 = ''
         obj.IMAGE2_ITEM5 = obj.IMAGE2_ITEM1S
       } else {
         obj.IMAGE2_ITEM1 = ''
         obj.IMAGE2_ITEM5 = ''
       }
+      obj.IMAGE1_TYPE = this.formLabelAlign.IMAGE1_TYPE + ''
+      obj.IMAGE2_TYPE = this.formLabelAlign.IMAGE2_TYPE + ''
       delete obj.IMAGE2_ITEM1S
       delete obj.IMAGE1_ITEM1S
+      console.log(obj)
       // this.$get('/mock/updateOcrInfo.json', obj).then(res => {
       this.$post('/ocr/updateOcrInfo.do', obj).then(res => {
         this.$router.push({ path: '/' })

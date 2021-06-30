@@ -122,7 +122,7 @@ export default defineComponent({
         IS_SUSPICIOUS: '',
         DEALER_NAME: '',
         VIN: '',
-        IS_CHECKED: '',
+        IS_CHECKED: '0',
         DEPT: '',
         NEXT_KEY: '1',
         PAGE_SIZE: '10'
