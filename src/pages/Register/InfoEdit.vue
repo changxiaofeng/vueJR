@@ -3,7 +3,7 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item @click="goListPage">登记证列表</el-breadcrumb-item>
       <el-breadcrumb-item><a href="/">登记证信息修改</a></el-breadcrumb-item>
-    </el-breadcrumb>
+    </el-breadcrumb>123
     <el-form :label-position="labelPosition" label-width="80px" :model="formformInline">
       <h2>基本信息</h2>
       <el-form-item label="合同名称" prop="CONT_NAME">
