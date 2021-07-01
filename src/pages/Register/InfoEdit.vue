@@ -3,7 +3,7 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item @click="goListPage">登记证列表</el-breadcrumb-item>
       <el-breadcrumb-item><a href="/">登记证信息修改</a></el-breadcrumb-item>
-    </el-breadcrumb>123
+    </el-breadcrumb>
     <el-form :label-position="labelPosition" label-width="80px" :model="formformInline">
       <h2>基本信息</h2>
       <el-form-item label="合同名称" prop="CONT_NAME">
@@ -236,17 +236,17 @@ export default defineComponent({
       } else if (obj.IMAGE1_TYPE === 1) {
         obj.IMAGE1_ITEM1 = ''
         obj.IMAGE1_ITEM5 = obj.IMAGE1_ITEM1S
-      } else {
+      } else if (obj.IMAGE1_TYPE === 2) {
         obj.IMAGE1_ITEM1 = ''
         obj.IMAGE1_ITEM5 = ''
       }
       if (obj.IMAGE2_TYPE === 0) {
         obj.IMAGE2_ITEM1 = obj.IMAGE2_ITEM1S
         obj.IMAGE2_ITEM5 = ''
-      } else if (obj.IMAGE1_TYPE === 1) {
-        obj.IMAGE2_ITEM1 = ''
+      } else if (obj.IMAGE2_TYPE === 1) {
         obj.IMAGE2_ITEM5 = obj.IMAGE2_ITEM1S
-      } else {
+        obj.IMAGE2_ITEM1 = ''
+      } else if (obj.IMAGE2_TYPE === 2) {
         obj.IMAGE2_ITEM1 = ''
         obj.IMAGE2_ITEM5 = ''
       }
